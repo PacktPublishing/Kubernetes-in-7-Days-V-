@@ -1,0 +1,83 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "infrastructure-docs.fullname" . }}
+  labels:
+    app: {{ template "infrastructure-docs.name" . }}
+    chart: {{ template "infrastructure-docs.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "infrastructure-docs.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "infrastructure-docs.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: private-registry
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+        {{- if .Values.oauth }}
+        - image: quay.io/gambol99/keycloak-proxy:v2.1.1
+          name: oauth-proxy
+          args:
+            - --listen=0.0.0.0:3000
+            - --discovery-url=https://citopro.au.auth0.com/
+            - --client-id=ia77819ai6xH9IwNW2ljITvqeQCHyY1o
+            - --client-secret=k5vaqhUBJW2uUaLJFKi0m0Iv60Jf_NZvy6_yDZQSF2V81VccnimP-Cbpc0zTvnbs
+            - --redirection-url=https://kube7days.do.citopro.com
+            - --enable-refresh-tokens=true
+            - --encryption-key=MsVRjD36bfAxfBvHUKUjXOTPXaItDThn    # 32 bytes string
+            - --upstream-url=http://kube7days.production.svc.cluster.local
+            - --resources=uri=/*
+            - --match-claims=email=^(.*@momenton.com.au|desdrury@gmail.com|shraddhapackt@gmail.com|james.buckett@gmail.com|packt.susant@gmail.com)$
+            # - --match-claims=email=^desdrury@gmail.com$
+          ports:
+          - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /oauth/health
+              port: 3000
+            initialDelaySeconds: 3
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /oauth/health
+              port: 3000
+            initialDelaySeconds: 3
+            timeoutSeconds: 2
+        {{ end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

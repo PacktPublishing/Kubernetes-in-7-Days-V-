@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "infrastructure-docs.fullname" . }}
+  labels:
+    app: {{ template "infrastructure-docs.name" . }}
+    chart: {{ template "infrastructure-docs.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    {{- if .Values.oauth }}
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: oauth
+    {{ end }}
+  selector:
+    app: {{ template "infrastructure-docs.name" . }}
+    release: {{ .Release.Name }}

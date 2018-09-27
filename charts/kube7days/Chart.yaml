@@ -1,0 +1,13 @@
+apiVersion: v1
+appVersion: "1.0"
+description: Kubernetes in 7 Days Packt Course
+name: kube7days
+version: 0.0.8
+home: https://kube7days.do.citopro.com
+keywords:
+  - documentation
+sources:
+  - https://github.com/desdrury/kubernetes-in-7-days.git
+maintainers:
+- name: desdrury
+  email: des@citopro.com
