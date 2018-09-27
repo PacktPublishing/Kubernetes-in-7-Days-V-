@@ -1,7 +1,7 @@
 # Kubernetes-in-7-Days-V- 
 This is the code repository for [Kubernetes in 7 Days [Video]](https://www.packtpub.com/virtualization-and-cloud/kubernetes-7-days-video), published by [Packt](https://www.packtpub.com/?utm_source=github). It contains all the supporting project files necessary to work through the video course from start to finish.
 ## About the Video Course
-	Kubernetes allows you to deploy cloud-native applications anywhere and manage them exactly as you like everywhere. Kubernetes is a core tool in DevOps; it gives you the ability to schedule and manage containers (Docker or otherwise) at scale.
+Kubernetes allows you to deploy cloud-native applications anywhere and manage them exactly as you like everywhere. Kubernetes is a core tool in DevOps; it gives you the ability to schedule and manage containers (Docker or otherwise) at scale.
 
 This course will help you to unravel the potential of Kubernetes in the shortest amount of time. You will begin by creating your first Kubernetes cluster using Minikube. Then move on to exploring Kubernetes in some more detail and build a complex cluster. By the 4th Day, you will learn to enhance your cluster with a Grafana based monitoring dashboard in your application. Once you’ve acquired knowledge on dashboards, explore how a Kubernetes cluster provisions storage to its applications and learn how to secure them. Finally, learn to create a CI/CD pipeline to build and deploy your applications.
 
